@@ -15,6 +15,7 @@ const port = 5001;
 // middleware
 app.use(express.json())
 app.use(cors())
+app.use("/api/truck", require('./routes/contactTruckRoutes'))
 app.use("/api/search", require("./routes/contactRoutes"))
 app.use(errorHandler)
 
