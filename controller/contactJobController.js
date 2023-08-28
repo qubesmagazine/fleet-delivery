@@ -1,11 +1,11 @@
-const Truck = require("../models/contactTruckModel");
+const Job = require("../models/contactJobModel");
 // const expressAsyncHandler = require("../middleware/asyncWrapper");
 const expressAsyncHandler = require("express-async-handler")
 const uuid = require('uuid');
 
 
 const getContacts = expressAsyncHandler(async (req, res) => {
-  const contacts = await Truck.find();
+  const contacts = await Job.find();
   res.status(200).json({ data: contacts }); // Wrap the contacts array in a 'data' property
 });
 
@@ -21,12 +21,12 @@ const getContacts = expressAsyncHandler(async (req, res) => {
 const createContact = expressAsyncHandler(async (req, res) => {
   try {
     console.log("Received JSON data:", req.body);
-    const contact = await Truck.create(req.body);
+    const contact = await Job.create(req.body);
     console.log("Contact created:", contact);
     res.status(201).json(contact);
   } catch (error) {
     console.error("Error creating contact:", error);
-    res.status(450).json({ message: "Error creating contact", error: error.message });
+    res.status(500).json({ message: "Error creating contact", error: error.message });
   }
 });
 
@@ -40,7 +40,7 @@ const createContact = expressAsyncHandler(async (req, res) => {
 
 
 const getContact = expressAsyncHandler( async (req, res) => {
-  const contact = await Truck.findById(req.params.id)
+  const contact = await Job.findById(req.params.id)
   if (!contact) {
     res.status(500);
     throw new Error('Couldnt find contact')
@@ -58,12 +58,12 @@ const getContact = expressAsyncHandler( async (req, res) => {
 // @access public
 
 const updateContact = expressAsyncHandler( async  (req, res) => {
-  const contact = await Truck.findById(req.params.id);
+  const contact = await Job.findById(req.params.id);
   if (!contact) {
     res.status(500);
     throw new Error('Couldnt find contact')
   }
-  const updatedContact = await Truck.findByIdAndUpdate(
+  const updatedContact = await Job.findByIdAndUpdate(
   req.params.id,
   req.body,
   {new: true}
@@ -80,7 +80,7 @@ const updateContact = expressAsyncHandler( async  (req, res) => {
 // @access public
 
 const deleteContact = expressAsyncHandler(async (req, res) => {
-  const contact = await Truck.findById(req.params.id);
+  const contact = await Job.findById(req.params.id);
   if (!contact) {
     res.status(404).json({ message: 'Contact not found' });
     return;

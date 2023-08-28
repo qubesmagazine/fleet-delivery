@@ -1,27 +1,22 @@
 const express = require("express");
 const connectDB = require("./config/dbconnection");
 const errorHandler = require("./middleware/errorHandler");
-const cors = require('cors')
-const dotenv = require("dotenv").config()
+const cors = require("cors");
+const dotenv = require("dotenv").config();
 
-
-
-connectDB()
+connectDB();
 const app = express();
 
 const port = 5001;
 
-
 // middleware
-app.use(express.json())
-app.use(cors())
-app.use("/api/truck", require('./routes/contactTruckRoutes'))
-app.use("/api/search", require("./routes/contactRoutes"))
-app.use(errorHandler)
-
-
+app.use(express.json());
+app.use(cors());
+app.use("/api/truck", require("./routes/contactTruckRoutes"));
+app.use("/api/search", require("./routes/contactRoutes"));
+app.use("/api/job", require("./routes/contactJobRoutes"));
+app.use(errorHandler);
 
 app.listen(port, () => {
   console.log(`Server running on port ${port}`);
 });
-
