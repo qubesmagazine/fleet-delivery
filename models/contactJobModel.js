@@ -2,6 +2,11 @@ const mongoose = require('mongoose');
 
 // Define the schema
 const contactSchema = mongoose.Schema({
+  user_id: {
+    type: mongoose.Schema.Types.ObjectId,
+    required: true,
+    ref: 'User',
+   },
   employer_name: String,
   employer_logo: String,
   employer_website: String,

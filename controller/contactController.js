@@ -4,20 +4,20 @@ const expressAsyncHandler = require("express-async-handler")
 const uuid = require('uuid');
 
 
+
+// @desc Get all contact
+// @route POST /api/search/
+// @access public
+
 const getContacts = expressAsyncHandler(async (req, res) => {
-  const contacts = await Contact.find();
+  const contacts = await Contact.find({user_id: req.user.id});
   res.status(200).json({ data: contacts }); // Wrap the contacts array in a 'data' property
 });
 
 
 // @desc Create New contact
-// @route POST /api/contacts
+// @route POST /api/search/
 // @access public
-
-
-
-
-
 
 
 const createContact = expressAsyncHandler(async (req, res) => {
@@ -35,7 +35,7 @@ const createContact = expressAsyncHandler(async (req, res) => {
 
 
 // @desc Get New contact
-// @route GET /api/contacts/:id
+// @route GET /api/search/:id
 // @access public
 
 
@@ -55,7 +55,7 @@ const getContact = expressAsyncHandler( async (req, res) => {
 
 
 // @desc Update contact
-// @route PUT /api/contacts/:id
+// @route PUT /api/search/:id
 // @access public
 
 const updateContact = expressAsyncHandler( async  (req, res) => {
@@ -64,6 +64,13 @@ const updateContact = expressAsyncHandler( async  (req, res) => {
     res.status(404);
     throw new Error('Couldnt find contact')
   }
+
+if (!contact.user_id.toString() !== req.params.id) {
+   res.status(403);
+   throw new Error('User dont have permission to update other user contacts')
+}
+
+
   const updatedContact = await Contact.findByIdAndUpdate(
   req.params.id,
   req.body,
@@ -74,21 +81,36 @@ const updateContact = expressAsyncHandler( async  (req, res) => {
   res.status(200).json(updatedContact);
 });
 
-// @desc Delete contact
-// @route delete /api/contacts/:id
-// @access public
 
-const deleteContact = expressAsyncHandler( async (req, res) => {
-  const contact = await Contact.findById(req.params.id);
-  if (!contact) {
-    res.status(404);
-    throw new Error('Couldnt find contact')
+
+
+
+
+const deleteContact = expressAsyncHandler(async (req, res) => {
+  try {
+    const contact = await Contact.findById(req.params.id);
+    if (!contact) {
+      res.status(404);
+      throw new Error('Could not find contact');
+    }
+
+    if (!contact.user_id.toString() !== req.params.id) {
+      res.status(403);
+      throw new Error('User dont have permission to update other user contacts')
+   }
+
+    await Contact.deleteOne({ _id: req.params.id }); // Use deleteOne to delete the contact
+
+    res.status(200).json({ message: 'Contact deleted successfully' });
+  } catch (error) {
+    console.error("Error deleting contact:", error);
+    res.status(500).json({ message: "Error deleting contact", error });
   }
-  await Contact.remove(contact)
-
-  res.status(200).json(contact);
-
 });
+
+
+
+
 
 module.exports = {
   getContacts,

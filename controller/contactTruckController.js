@@ -5,7 +5,7 @@ const uuid = require('uuid');
 
 
 const getContacts = expressAsyncHandler(async (req, res) => {
-  const contacts = await Truck.find();
+  const contacts = await Truck.find({user_id: req.user.id});
   res.status(200).json({ data: contacts }); // Wrap the contacts array in a 'data' property
 });
 
@@ -80,17 +80,21 @@ const updateContact = expressAsyncHandler( async  (req, res) => {
 // @access public
 
 const deleteContact = expressAsyncHandler(async (req, res) => {
-  const contact = await Truck.findById(req.params.id);
-  if (!contact) {
-    res.status(404).json({ message: 'Contact not found' });
-    return;
+  try {
+    const contact = await Truck.findById(req.params.id);
+    if (!contact) {
+      res.status(404);
+      throw new Error('Could not find contact');
+    }
+
+    await Truck.deleteOne({ _id: req.params.id }); // Use deleteOne to delete the contact
+
+    res.status(200).json({ message: 'Contact deleted successfully' });
+  } catch (error) {
+    console.error("Error deleting contact:", error);
+    res.status(500).json({ message: "Error deleting contact", error });
   }
-
-  await contact.remove();
-
-  res.status(200).json({ message: 'Contact deleted successfully' });
 });
-
 
 module.exports = {
   getContacts,

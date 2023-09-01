@@ -15,6 +15,8 @@ app.use(cors());
 app.use("/api/truck", require("./routes/contactTruckRoutes"));
 app.use("/api/search", require("./routes/contactRoutes"));
 app.use("/api/job", require("./routes/contactJobRoutes"));
+app.use("/api/users", require("./routes/userRoutes"));
+
 app.use(errorHandler);
 
 app.listen(port, () => {
