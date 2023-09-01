@@ -5,7 +5,7 @@ const uuid = require('uuid');
 
 
 const getContacts = expressAsyncHandler(async (req, res) => {
-  const contacts = await Job.find({user_id: req.user.id});
+  const contacts = await Job.find();
   res.status(200).json({ data: contacts }); // Wrap the contacts array in a 'data' property
 });
 
