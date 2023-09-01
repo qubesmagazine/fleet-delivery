@@ -1,11 +1,11 @@
 const mongoose = require("mongoose");
 
 const contactSchema = mongoose.Schema({
-  user_id: {
-    type: mongoose.Schema.Types.ObjectId,
-    required: true,
-    ref: 'User',
-   },
+  // user_id: {
+  //   type: mongoose.Schema.Types.ObjectId,
+  //   required: true,
+  //   ref: 'User',
+  //  },
   query: String,
   company_id: String,
   company_name: String,

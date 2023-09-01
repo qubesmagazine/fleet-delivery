@@ -10,7 +10,7 @@ const uuid = require('uuid');
 // @access public
 
 const getContacts = expressAsyncHandler(async (req, res) => {
-  const contacts = await Contact.find({user_id: req.user.id});
+  const contacts = await Contact.find();
   res.status(200).json({ data: contacts }); // Wrap the contacts array in a 'data' property
 });
 
@@ -64,13 +64,6 @@ const updateContact = expressAsyncHandler( async  (req, res) => {
     res.status(404);
     throw new Error('Couldnt find contact')
   }
-
-if (!contact.user_id.toString() !== req.params.id) {
-   res.status(403);
-   throw new Error('User dont have permission to update other user contacts')
-}
-
-
   const updatedContact = await Contact.findByIdAndUpdate(
   req.params.id,
   req.body,
@@ -93,11 +86,6 @@ const deleteContact = expressAsyncHandler(async (req, res) => {
       res.status(404);
       throw new Error('Could not find contact');
     }
-
-    if (!contact.user_id.toString() !== req.params.id) {
-      res.status(403);
-      throw new Error('User dont have permission to update other user contacts')
-   }
 
     await Contact.deleteOne({ _id: req.params.id }); // Use deleteOne to delete the contact
 
