@@ -70,7 +70,7 @@ const loginUser = expressAsyncHandler(async (req, res) => {
           },
         },
         process.env.ACCESS_TOKEN_SECRET,
-        { expiresIn: "15m" }
+        { expiresIn: "1m" }
       );
 
       res.status(200).json({ accessToken });
